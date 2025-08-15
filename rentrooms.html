@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoomsToRent - Find Your Perfect Space</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .hero-image {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1554469384-e58fac16e23a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+        }
+        
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .amenity-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .amenity-icon:hover {
+            transform: scale(1.2);
+            color: #3b82f6;
+        }
+        
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Custom checkbox for filters */
+        .custom-checkbox {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+        }
+        
+        .custom-checkbox:checked {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+        }
+        
+        .custom-checkbox:checked::after {
+            content: "✓";
+            color: white;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-home text-blue-500 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold text-blue-500">RoomsToRent</span>
+                    </div>
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-4">
+                            <a href="#" class="text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                            <a href="#listings" class="text-gray-600 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Listings</a>
+                            <a href="#how-it-works" class="text-gray-600 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">How It Works</a>
+                            <a href="#testimonials" class="text-gray-600 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Testimonials</a>
+                            <a href="#contact" class="text-gray-600 hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium">Contact</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-4 flex items-center md:ml-6">
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
+                            List Your Room
+                        </button>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-blue-500 focus:outline-none">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#" class="text-blue-500 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="#listings" class="text-gray-600 hover:text-blue-500 block px-3 py-2 rounded-md text-base font-medium">Listings</a>
+                <a href="#how-it-works" class="text-gray-600 hover:text-blue-500 block px-3 py-2 rounded-md text-base font-medium">How It Works</a>
+                <a href="#testimonials" class="text-gray-600 hover:text-blue-500 block px-3 py-2 rounded-md text-base font-medium">Testimonials</a>
+                <a href="#contact" class="text-gray-600 hover:text-blue-500 block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium block w-full mt-2 transition duration-300">
+                    List Your Room
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-image h-96 md:h-screen/2 flex items-center justify-center">
+        <div class="text-center px-4">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">Find Your Perfect Room</h1>
+            <p class="text-xl md:text-2xl text-white mb-8">Thousands of rooms available for rent across the country</p>
+            
+            <!-- Search Form -->
+            <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-4">
+                <div class="flex flex-col md:flex-row gap-4">
+                    <div class="flex-1">
+                        <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                        <div class="relative">
+                            <input type="text" id="location" placeholder="City, neighborhood, or address" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            <i class="fas fa-map-marker-alt absolute right-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <label for="move-in" class="block text-sm font-medium text-gray-700 mb-1">Move-in Date</label>
+                        <div class="relative">
+                            <input type="date" id="move-in" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                            <i class="fas fa-calendar-alt absolute right-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <label for="budget" class="block text-sm font-medium text-gray-700 mb-1">Max Budget</label>
+                        <div class="relative">
+                            <select id="budget" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                <option value="">Any</option>
+                                <option value="500">$500</option>
+                                <option value="1000">$1000</option>
+                                <option value="1500">$1500</option>
+                                <option value="2000">$2000</option>
+                                <option value="2500">$2500+</option>
+                            </select>
+                            <i class="fas fa-dollar-sign absolute right-3 top-3 text-gray-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-end">
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-md h-[42px] transition duration-300">
+                            <i class="fas fa-search mr-2"></i> Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Listings -->
+    <section id="listings" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Featured Rooms</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Browse our selection of premium rooms available for rent</p>
+            </div>
+            
+            <!-- Filters -->
+            <div class="bg-gray-100 rounded-lg p-4 mb-8">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div class="flex items-center">
+                        <span class="text-gray-700 mr-3 font-medium">Filters:</span>
+                        <div class="flex flex-wrap gap-3">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="custom-checkbox">
+                                <span class="ml-1 text-gray-700">Private Bathroom</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="custom-checkbox">
+                                <span class="ml-1 text-gray-700">Furnished</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="custom-checkbox">
+                                <span class="ml-1 text-gray-700">Pet Friendly</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" class="custom-checkbox">
+                                <span class="ml-1 text-gray-700">Utilities Included</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-gray-700 mr-3 font-medium">Sort by:</span>
+                        <select class="border border-gray-300 rounded-md px-3 py-1 focus:ring-blue-500 focus:border-blue-500">
+                            <option>Price: Low to High</option>
+                            <option>Price: High to Low</option>
+                            <option>Newest First</option>
+                            <option>Best Match</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Room Listings -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Room Card 1 -->
+                <div class="room-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Modern bedroom" class="w-full h-48 object-cover">
+                        <div class="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded-md text-xs font-bold">NEW</div>
+                        <div class="absolute bottom-2 left-2 bg-white text-gray-800 px-2 py-1 rounded-md text-xs font-bold">$950/month</div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-1">Modern Room in Downtown</h3>
+                        <p class="text-gray-600 mb-2 flex items-center">
+                            <i class="fas fa-map-marker-alt text-blue-500 mr-1"></i> 
+                            Chicago, IL • 2.3 miles from center
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded flex items-center">
+                                <i class="fas fa-bed text-blue-500 mr-1"></i> 1 Bed
+                            </span>
+                            <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded flex items-center">
+                                <i class="fas fa-bath text-blue-500 mr-1"></i> Private Bath
+                            </span>
+                            <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded flex items-center">
+                                <i class="fas fa-ruler-combined text-blue-500 mr-1"></i> 250 sqft
+                            </span>
+                        </div>
+                        <p class="text-gray-700 mb-4">Beautifully furnished private room with walk-in closet and private bathroom in a modern downtown apartment.</p>
+                        <div class="flex justify-between items-center">
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
+                                View Details
+                            </button>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-gray-700">4.8 (24)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Room Card 2 -->
+                <div class="room-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="Cozy bedroom" class="w-full h-48 object-cover">
+                        <div class="absolute bottom-2 left-2 bg-white text-gray-800 px-2 py-1 rounded-md text-xs font-bold">$750/month</div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-1">Cozy Room in Quiet Neighborhood</h3>
+                        <p class="text-gray-600 mb-2 flex items-center">
+                            <i class="fas fa-map-marker-alt text-blue-500 mr-1"></i> 
+                            Austin, TX • 1.5 miles from center
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded flex items-center">
+                                <i class="fas fa-bed text-blue-500 mr-1"></i> 1 Bed
+                            </span>
+                            <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded flex items-center">
+                                <i class="fas fa-bath text-blue-500 mr-1"></i> Shared Bath
+                            </span>
+                            <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded flex items-center">
+                                <i class="fas fa-ruler-combined text-blue-500 mr-1"></i> 180 sqft
+                            </span>
+                        </div>
+                        <p class="text-gray-700 mb-4">Charming room in a shared house with friendly roommates. Utilities included and pet friendly!</p>
+                        <div class="flex justify-between items-center">
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
+                                View Details
+                            </button>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-gray-700">4.5 (18)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Room Card 3 -->
+                <div class="room-card bg-white rounded-lg overflow-hidden shadow-md transition duration-300">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Luxury bedroom" class="w-full h-48 object-cover">
+                        <div class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md text-xs font-bold">DISCOUNT</div>
+                        <div class="absolute bottom-2 left-2 bg-white text-gray-800 px-2 py-1 rounded-md text-xs font-bold">$1200/month</div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-xl font-bold text-gray-900 mb-1">Luxury Room with City View</h3>
+                        <p class="text-gray-600 mb-2 flex items-center">
+                            <i class="fas fa-map-marker-alt text-blue-500 mr-1"></i> 
+                            New York, NY • 0.5 miles from center
+                        </p>
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded flex items-center">
+                                <i class="fas fa-bed text-blue-500 mr-1"></i> 1 Bed
+                            </span>
+                            <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded flex items-center">
+                                <i class="fas fa-bath text-blue-500 mr-1"></i> Private Bath
+                            </span>
+                            <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded flex items-center">
+                                <i class="fas fa-ruler-combined text-blue-500 mr-1"></i> 300 sqft
+                            </span>
+                        </div>
+                        <p class="text-gray-700 mb-4">Stunning room in luxury high-rise with amazing city views. Includes gym access and rooftop terrace.</p>
+                        <div class="flex justify-between items-center">
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium transition duration-300">
+                                View Details
+                            </button>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <span class="ml-1 text-gray-700">4.9 (32)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <button class="bg-white border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-6 py-3 rounded-md font-medium transition duration-300">
+                    View All Listings
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">How It Works</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Renting a room has never been easier</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-search text-blue-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">1. Find Your Room</h3>
+                    <p class="text-gray-600">Browse our extensive listings to find rooms that match your preferences for location, budget, and amenities.</p>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-calendar-check text-blue-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">2. Schedule a Visit</h3>
+                    <p class="text-gray-600">Contact the host to schedule a viewing at a time that works for you. Virtual tours also available.</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                    <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-key text-blue-500 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">3. Move In</h3>
+                    <p class="text-gray-600">Sign the lease agreement, pay your deposit, and move into your new room. It's that simple!</p>
+                </div>
+            </div>
+            
+            <div class="mt-12 bg-blue-50 rounded-lg p-8">
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 mb-6 md:mb-0 md:pr-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">Are You a Room Owner?</h3>
+                        <p class="text-gray-600 mb-4">List your spare room and earn extra income. We handle the marketing, screening, and paperwork.</p>
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md font-medium transition duration-300">
+                            List Your Room Now
+                        </button>
+                    </div>
+                    <div class="md:w-1/2">
+                        <img src="https://images.unsplash.com/photo-1554469384-e58fac16e23a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" alt="Room for rent" class="rounded-lg shadow-md w-full">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="testimonials" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">What Our Users Say</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Hear from people who found their perfect room</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Sarah J." class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-900">Sarah J.</h4>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"I found the perfect room in downtown Chicago through RoomsToRent. The process was so easy and my roommates are amazing!"</p>
+                    <p class="text-sm text-gray-500">Renting since June 2022</p>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael T." class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-900">Michael T.</h4>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"As a landlord, RoomsToRent helped me find great tenants quickly. Their screening process is thorough and I've had zero issues."</p>
+                    <p class="text-sm text-gray-500">Listing rooms since 2020</p>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Jessica L." class="w-12 h-12 rounded-full mr-4">
+                        <div>
+                            <h4 class="font-bold text-gray-900">Jessica L.</h4>
+                            <div class="flex">
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star text-yellow-400"></i>
+                                <i class="fas fa-star-half-alt text-yellow-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">"Moving to a new city was stressful, but RoomsToRent made finding a room so simple. I love my new place and neighborhood!"</p>
+                    <p class="text-sm text-gray-500">Renting since March 2023</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Frequently Asked Questions</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Find answers to common questions about room rentals</p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto">
+                <!-- FAQ Item 1 -->
+                <div class="mb-6 border-b border-gray-200 pb-4">
+                    <button class="faq-toggle flex justify-between items-center w-full text-left focus:outline-none">
+                        <h3 class="text-lg font-medium text-gray-900">How do I schedule a viewing for a room?</h3>
+                        <i class="fas fa-chevron-down text-blue-500 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content mt-2 hidden">
+                        <p class="text-gray-600">Once you find a room you're interested in, click the "Contact Host" button to send a message to the room owner. You can discuss available viewing times and arrange to see the room in person or schedule a virtual tour.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 2 -->
+                <div class="mb-6 border-b border-gray-200 pb-4">
+                    <button class="faq-toggle flex justify-between items-center w-full text-left focus:outline-none">
+                        <h3 class="text-lg font-medium text-gray-900">What's included in the rent price?</h3>
+                        <i class="fas fa-chevron-down text-blue-500 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content mt-2 hidden">
+                        <p class="text-gray-600">This varies by listing. Some rooms include all utilities (electricity, water, gas, internet) in the rent price, while others may charge these separately. Always check the listing details or ask the host what's included before committing.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 3 -->
+                <div class="mb-6 border-b border-gray-200 pb-4">
+                    <button class="faq-toggle flex justify-between items-center w-full text-left focus:outline-none">
+                        <h3 class="text-lg font-medium text-gray-900">How does the security deposit work?</h3>
+                        <i class="fas fa-chevron-down text-blue-500 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content mt-2 hidden">
+                        <p class="text-gray-600">Most landlords require a security deposit (typically equal to one month's rent) to cover any potential damages. This deposit is refundable at the end of your tenancy provided there's no damage to the property beyond normal wear and tear.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 4 -->
+                <div class="mb-6 border-b border-gray-200 pb-4">
+                    <button class="faq-toggle flex justify-between items-center w-full text-left focus:outline-none">
+                        <h3 class="text-lg font-medium text-gray-900">Can I rent a room short-term?</h3>
+                        <i class="fas fa-chevron-down text-blue-500 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content mt-2 hidden">
+                        <p class="text-gray-600">Some hosts offer short-term rentals (month-to-month or even weekly), while others prefer longer-term tenants (6-12 months). Use our filters to search for rooms that match your desired rental period.</p>
+                    </div>
+                </div>
+                
+                <!-- FAQ Item 5 -->
+                <div class="mb-6 border-b border-gray-200 pb-4">
+                    <button class="faq-toggle flex justify-between items-center w-full text-left focus:outline-none">
+                        <h3 class="text-lg font-medium text-gray-900">What if I have issues with my roommates?</h3>
+                        <i class="fas fa-chevron-down text-blue-500 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content mt-2 hidden">
+                        <p class="text-gray-600">We recommend discussing any issues directly with your roommates first. If problems persist, you can contact our support team for mediation assistance. For serious issues, you may need to consult your lease agreement about early termination options.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Contact Us</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Have questions? We're here to help!</p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="md:w-1/2">
+                    <form class="space-y-4">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                            <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                            <select id="subject" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
+                                <option>General Inquiry</option>
+                                <option>Listing a Room</option>
+                                <option>Technical Support</option>
+                                <option>Billing Question</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                            <textarea id="message" rows="4" class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md font-medium transition duration-300 w-full">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="md:w-1/2">
+                    <div class="bg-gray-50 p-6 rounded-lg h-full">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Our Information</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start">
+                                <i class="fas fa-map-marker-alt text-blue-500 mt-1 mr-3"></i>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Address</h4>
+                                    <p class="text-gray-600">123 Rental Street, Suite 100<br>San Francisco, CA 94107</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-phone-alt text-blue-500 mt-1 mr-3"></i>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Phone</h4>
+                                    <p class="text-gray-600">(555) 123-4567<br>Mon-Fri, 9am-5pm PST</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-envelope text-blue-500 mt-1 mr-3"></i>
+                                <div>
+                                    <h4 class="font-medium text-gray-900">Email</h4>
+                                    <p class="text-gray-600">hello@roomstorrent.com<br>We typically reply within 24 hours</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-gray-900 mt-8 mb-4">Follow Us</h3>
+                        <div class="flex space-x-4">
+                            <a href="#" class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-600 transition duration-300">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="bg-blue-400 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-500 transition duration-300">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="bg-pink-500 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-pink-600 transition duration-300">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="bg-blue-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-blue-700 transition duration-300">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="py-12 bg-blue-500 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="mb-6 md:mb-0">
+                    <h3 class="text-2xl font-bold mb-2">Stay Updated</h3>
+                    <p class="text-blue-100">Subscribe to our newsletter for new listings and rental tips</p>
+                </div>
+                <div class="w-full md:w-auto">
+                    <form class="flex flex-col sm:flex-row gap-2">
+                        <input type="email" placeholder="Your email address" class="px-4 py-3 rounded-md text-gray-900 w-full sm:w-64 focus:outline-none">
+                        <button type="submit" class="bg-white text-blue-500 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition duration-300">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-home text-blue-500 text-2xl mr-2"></i>
+                        <span class="text-xl font-bold">RoomsToRent</span>
+                    </div>
+                    <p class="text-gray-400">Connecting renters with room owners since 2015. Our mission is to make finding and renting rooms simple and stress-free.</p>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Home</a></li>
+                        <li><a href="#listings" class="text-gray-400 hover:text-white transition duration-300">Listings</a></li>
+                        <li><a href="#how-it-works" class="text-gray-400 hover:text-white transition duration-300">How It Works</a></li>
+                        <li><a href="#testimonials" class="text-gray-400 hover:text-white transition duration-300">Testimonials</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition duration-300">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Cities</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">New York</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Los Angeles</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Chicago</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Houston</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">San Francisco</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">Cookie Policy</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition duration-300">GDPR Compliance</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 mb-4 md:mb-0">© 2023 RoomsToRent. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-cc-visa text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-cc-mastercard text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-cc-amex text-2xl"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                        <i class="fab fa-cc-paypal text-2xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // FAQ toggle functionality
+        document.querySelectorAll('.faq-toggle').forEach(button => {
+            button.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const icon = this.querySelector('i');
+                
+                // Toggle content visibility
+                content.classList.toggle('hidden');
+                
+                // Rotate icon
+                if (content.classList.contains('hidden')) {
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    icon.style.transform = 'rotate(180deg)';
+                }
+            });
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+        });
+
+        // Room card hover effect enhancement
+        document.querySelectorAll('.room-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                const img = this.querySelector('img');
+                if (img) {
+                    img.style.transform = 'scale(1.03)';
+                    img.style.transition = 'transform 0.3s ease';
+                }
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                const img = this.querySelector('img');
+                if (img) {
+                    img.style.transform = 'scale(1)';
+                }
+            });
+        });
+
+        // Form submission handling (example)
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                // In a real application, you would handle form submission here
+                alert('Form submitted! In a real application, this would send your data to our servers.');
+            });
+        });
+    </script>
+</body>
+</html>
